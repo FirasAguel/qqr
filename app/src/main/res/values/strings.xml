@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">qqr</string>
+    <string name="tile_label">Qr Reader</string>
 </resources>
