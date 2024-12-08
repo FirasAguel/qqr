@@ -3,6 +3,10 @@ package com.sardonyx001.qqr.service
 import android.content.Intent
 import android.service.quicksettings.TileService
 import android.graphics.Bitmap
+import android.content.IntentFilter
+import android.service.quicksettings.TileService
+import android.util.Log
+import com.sardonyx001.qqr.receiver.ScreenshotBroadcastReceiver
 
 class QrReaderTileService: TileService() {
     override fun onClick() {
@@ -31,6 +35,8 @@ class QrReaderTileService: TileService() {
 //        )
 //
 //        startActivityAndCollapse(pendingIntent)
+    // Called when the user adds your tile.
+    override fun onTileAdded() {
     }
 
     private fun showLinkDialog(links: ArrayList<String>) {
@@ -44,8 +50,27 @@ class QrReaderTileService: TileService() {
         TODO()
     }
 
-    private fun convertImageToBitmap(image: android.media.Image): Bitmap {
-        TODO()
+    
+    lateinit var receiver: ScreenshotBroadcastReceiver
+    private lateinit var screenshotBroadcastReceiver: ScreenshotBroadcastReceiver
+
+    var isReceiverRegistered = false
+
+    // Called when the user taps on your tile in an active or inactive state.
+    override fun onClick() {
+        super.onClick()
+        val intent = Intent("com.sardonyx001.qqr.TAKE_SCREENSHOT")
+        Log.d("TAG", "Sending broadcast with action: ${intent.action}")
+        sendBroadcast(intent)
+        super.onTileAdded()
+
+        if(!isReceiverRegistered) {
+            screenshotBroadcastReceiver = ScreenshotBroadcastReceiver()
+            val intentFilter = IntentFilter("com.sardonyx001.qqr.TAKE_SCREENSHOT")
+            registerReceiver(screenshotBroadcastReceiver, intentFilter, RECEIVER_EXPORTED)
+            isReceiverRegistered = true
+        }
+
     }
 
     private fun scanQRCodes(bitmap: Bitmap) {
