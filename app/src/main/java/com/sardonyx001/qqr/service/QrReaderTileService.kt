@@ -35,6 +35,7 @@ class QrReaderTileService: TileService() {
 //        )
 //
 //        startActivityAndCollapse(pendingIntent)
+    }
     // Called when the user adds your tile.
     override fun onTileAdded() {
     }
