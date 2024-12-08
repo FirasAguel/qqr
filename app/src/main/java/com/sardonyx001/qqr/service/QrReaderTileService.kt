@@ -1,27 +1,56 @@
 package com.sardonyx001.qqr.service
 
 import android.content.Intent
+import android.service.quicksettings.TileService
+import android.graphics.Bitmap
 import android.content.IntentFilter
 import android.service.quicksettings.TileService
 import android.util.Log
 import com.sardonyx001.qqr.receiver.ScreenshotBroadcastReceiver
 
-
 class QrReaderTileService: TileService() {
+    override fun onClick() {
+        super.onClick()
 
+        val testLinks = ArrayList<String>().apply {
+            add("https://www.google.com")
+            add("https://www.github.com")
+            add("https://www.stackoverflow.com")
+            add("https://www.anthropic.com")
+        }
+
+        showLinkDialog(testLinks)
+
+//        // Create Intent
+//        val intent = Intent(this, LinkDialogActivity::class.java).apply {
+//            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+//            putExtra("LINKS", testLinks)
+//        }
+//        // Create PendingIntent
+//        val pendingIntent = PendingIntent.getActivity(
+//            this,
+//            0,
+//            intent,
+//            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+//        )
+//
+//        startActivityAndCollapse(pendingIntent)
     // Called when the user adds your tile.
     override fun onTileAdded() {
     }
-    // Called when your app can update your tile.
-    override fun onStartListening() {
-        super.onStartListening()
+
+    private fun showLinkDialog(links: ArrayList<String>) {
+        val intent = Intent(this, LinkDialogService::class.java).apply {
+            putStringArrayListExtra("LINKS", links)
+        }
+        startService(intent)
     }
 
-    // Called when your app can no longer update your tile.
-    override fun onStopListening() {
-        super.onStopListening()
+    private fun captureAndScanScreenshot() {
+        TODO()
     }
 
+    
     lateinit var receiver: ScreenshotBroadcastReceiver
     private lateinit var screenshotBroadcastReceiver: ScreenshotBroadcastReceiver
 
@@ -43,8 +72,10 @@ class QrReaderTileService: TileService() {
         }
 
     }
-    // Called when the user removes your tile.
-    override fun onTileRemoved() {
-        super.onTileRemoved()
+
+    private fun scanQRCodes(bitmap: Bitmap) {
+        TODO()
     }
+
+
 }
